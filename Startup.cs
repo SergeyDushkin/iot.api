@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nest;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 
 namespace iot.api
@@ -31,6 +32,11 @@ namespace iot.api
 
             services.AddSingleton<IElasticClient>(client);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "IOT API", Version = "v1" });
+            });
+
             // Add framework services.
             services.AddMvc();
         }
@@ -42,6 +48,13 @@ namespace iot.api
             loggerFactory.AddDebug();
 
             app.UseMvc();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ServiceDesk.Services.Tickets API");
+            });
         }
     }
 }
