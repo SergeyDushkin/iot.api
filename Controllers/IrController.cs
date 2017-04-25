@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using iot.api.Domain;
 using Nest;
+using iot.api.Domain;
 
 namespace iot.api.Controllers
 {
-    [Route("api/ir/{manufacturer}")]
+    [Route("api/ir/")]
     public class IrController : Controller
     {
         private readonly IElasticClient client;
@@ -17,16 +17,21 @@ namespace iot.api.Controllers
             this.client = client;
         }
 
-        [HttpGet]
-        public IEnumerable<IRDeviceSetting> Get(string manufacturer)
+        [HttpGet("{manufacturer=}")]
+        public IEnumerable<IRDeviceSetting> Get(string manufacturer = null)
         {
+            if (String.IsNullOrEmpty(manufacturer))
+            {
+                return client.Search<IRDeviceSetting>(s => s.Index("ir")).Documents;
+            }
+
             return client.Search<IRDeviceSetting>(s => s.Index("ir"))
                 .Documents
                 .Where(r => r.Manufacturer == manufacturer);
         }
         
-        [HttpGet("{model}")]
-        public IRDeviceSetting Get(string manufacturer = null, string model = null)
+        [HttpGet("{manufacturer}/{model}")]
+        public IRDeviceSetting Get(string manufacturer, string model)
         {
             return client.Search<IRDeviceSetting>(s => s.Index("ir"))
                 .Documents
@@ -42,7 +47,7 @@ namespace iot.api.Controllers
             var response = client.Update<IRDeviceSetting, object>(id, u => u.Index("ir").Doc(value).DocAsUpsert());
         }
         
-        [HttpDelete("{model}")]
+        [HttpDelete("{manufacturer}/{model}")]
         public void Delete(string manufacturer, string model)
         {
             var id = manufacturer + ":" + model;
