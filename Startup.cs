@@ -26,6 +26,13 @@ namespace iot.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(x => x.AddPolicy("cors", policy => {
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                policy.AllowAnyOrigin();
+                policy.AllowCredentials();
+            }));
+
             var node = new Uri("http://52.178.193.205:9200/");
             var settings = new ConnectionSettings(node);
             var client = new ElasticClient(settings);
@@ -47,6 +54,7 @@ namespace iot.api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseCors("cors");
             app.UseMvc();
 
             app.UseSwagger();
