@@ -4,7 +4,7 @@
     {
         public string Manufacturer { get; set; }
         public string Model { get; set; }
-        public string Template { get; set; }
+        public TemplateStruct[] Template { get; set; }
         public int Command_length { get; set; }
         public OneStruct One { get; set; }
         public OneStruct Zero { get; set; }
@@ -33,6 +33,7 @@
 
         public class TemplateStruct
         {
+            public string Item { get; set; }
         }
 
         public class PropertyStruct
