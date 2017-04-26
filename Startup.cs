@@ -34,7 +34,11 @@ namespace iot.api
             }));
 
             var node = new Uri("http://52.178.193.205:9200/");
-            var settings = new ConnectionSettings(node);
+            var settings = new ConnectionSettings(node)
+                .SniffOnConnectionFault(false)
+                .SniffOnStartup(false)
+                .SniffLifeSpan(TimeSpan.FromMinutes(1));
+                
             var client = new ElasticClient(settings);
 
             services.AddSingleton<IElasticClient>(client);
