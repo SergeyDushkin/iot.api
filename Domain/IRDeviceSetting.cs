@@ -31,6 +31,10 @@
             public int Space { get; set; }
         }
 
+        public class TemplateStruct
+        {
+        }
+
         public class PropertyStruct
         {
             public HeaderStruct Header { get; set; }

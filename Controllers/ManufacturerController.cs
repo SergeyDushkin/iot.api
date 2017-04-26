@@ -25,7 +25,7 @@ namespace iot.api.Controllers
             if (includeAll)
             {
                 return result.Documents
-                    .Where(r => String.IsNullOrEmpty(query) ? true : r.Manufacturer.StartsWith(query))
+                    .Where(r => String.IsNullOrEmpty(query) ? true : r.Manufacturer.StartsWith(query, StringComparison.OrdinalIgnoreCase))
                     .Select(r => new { r.Manufacturer, r.Model })
                     .GroupBy(r => r.Manufacturer)
                     .Select(r => new { Manufacturer = r.Key, Models = r.Select(n => n.Model) })
@@ -33,7 +33,7 @@ namespace iot.api.Controllers
             }
 
             return result.Documents
-                .Where(r => String.IsNullOrEmpty(query) ? true : r.Manufacturer.StartsWith(query))
+                .Where(r => String.IsNullOrEmpty(query) ? true : r.Manufacturer.StartsWith(query, StringComparison.OrdinalIgnoreCase))
                 .Select(r => new { r.Manufacturer })
                 .GroupBy(r => r.Manufacturer)
                 .Select(r => new { Manufacturer = r.Key })
@@ -83,7 +83,7 @@ namespace iot.api.Controllers
 
             return result.Documents
                 .Where(r => r.Manufacturer == manufacturer)
-                .Where(r => String.IsNullOrEmpty(query) ? true : r.Model.StartsWith(query))
+                .Where(r => String.IsNullOrEmpty(query) ? true : r.Model.StartsWith(query, StringComparison.OrdinalIgnoreCase))
                 .Select(r => new { r.Manufacturer, r.Model })
                 .GroupBy(r => r.Manufacturer)
                 .Select(r => new { Manufacturer = r.Key, Models = r.Select(n => n.Model) })
