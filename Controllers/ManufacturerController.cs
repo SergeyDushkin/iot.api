@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
@@ -17,20 +18,22 @@ namespace iot.api.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<object> Get(bool includeAll = false)
+        public IEnumerable<object> Get(bool includeAll = false, string query = null)
         {
-            var query = client.Search<IRDeviceSetting>(s => s.Index("ir"));
+            var result = client.Search<IRDeviceSetting>(s => s.Index("ir"));
 
             if (includeAll)
             {
-                return query.Documents
+                return result.Documents
+                    .Where(r => String.IsNullOrEmpty(query) ? true : r.Manufacturer.StartsWith(query))
                     .Select(r => new { r.Manufacturer, r.Model })
                     .GroupBy(r => r.Manufacturer)
                     .Select(r => new { Manufacturer = r.Key, Models = r.Select(n => n.Model) })
                     .OrderBy(r => r.Manufacturer);
             }
 
-            return query.Documents
+            return result.Documents
+                .Where(r => String.IsNullOrEmpty(query) ? true : r.Manufacturer.StartsWith(query))
                 .Select(r => new { r.Manufacturer })
                 .GroupBy(r => r.Manufacturer)
                 .Select(r => new { Manufacturer = r.Key })
@@ -74,17 +77,17 @@ namespace iot.api.Controllers
         }
         
         [HttpGet("{manufacturer}")]
-        public object Get(string manufacturer)
+        public object Get(string manufacturer, string query = null)
         {
-            var query = client.Search<IRDeviceSetting>(s => s.Index("ir"));
+            var result = client.Search<IRDeviceSetting>(s => s.Index("ir"));
 
-            var result = query.Documents
+            return result.Documents
+                .Where(r => r.Manufacturer == manufacturer)
+                .Where(r => String.IsNullOrEmpty(query) ? true : r.Model.StartsWith(query))
                 .Select(r => new { r.Manufacturer, r.Model })
                 .GroupBy(r => r.Manufacturer)
                 .Select(r => new { Manufacturer = r.Key, Models = r.Select(n => n.Model) })
-                .SingleOrDefault(r => r.Manufacturer == manufacturer);
-
-            return result;
+                .SingleOrDefault();
         }
     }
 }
