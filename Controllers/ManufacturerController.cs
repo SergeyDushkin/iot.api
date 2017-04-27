@@ -12,9 +12,9 @@ namespace iot.api.Controllers
     {
         private readonly IElasticClient client;
 
-        public ManufacturerController(IElasticClient client)
+        public ManufacturerController(ConnectionSettings setting)
         {
-            this.client = client;
+            this.client = new ElasticClient(setting);
         }
 
         [HttpGet()]

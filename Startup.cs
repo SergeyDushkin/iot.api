@@ -39,7 +39,8 @@ namespace iot.api
                 .SniffOnStartup(false)
                 .SniffLifeSpan(TimeSpan.FromMinutes(1));
 
-            services.AddScoped<IElasticClient>(r => new ElasticClient(settings));
+            services.AddSingleton(settings);
+            //services.AddScoped<IElasticClient>(r => new ElasticClient(settings));
 
             services.AddSwaggerGen(c =>
             {
@@ -58,6 +59,8 @@ namespace iot.api
 
             app.UseCors("cors");
             app.UseMvc();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseSwagger();
 

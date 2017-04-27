@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>IoT-</title>
+
+		<script defer src="material.min.js"></script>
+		<link rel="stylesheet" href="material.min.css" />
+
+		<style type="text/css">
+		* {
+			font-family: 'Verdana'; 
+		}
+		html {
+			text-align: center;
+		}
+		input, select {
+			text-align: center;
+		}	
+		</style>
+
+	</head>
+
+<body>
+
+
+	<form>
+		<div class="mdl-textfield mdl-js-textfield">
+			<input class="mdl-textfield__input" type="text" list="manufacturer_list" id="manufacturer" placeholder="Manufacturer" onkeyup="loadMnfList(this);" onchange="loadModelList(this.value)"></input>
+			<datalist id="manufacturer_list"></datalist>
+			<label class="mdl-textfield__label" for="manufacturer">manufacturer</label>
+		</div>
+		<div class="mdl-textfield mdl-js-textfield">
+			<input class="mdl-textfield__input" type="text" list="model_list" id="model" placeholder="Model" onchange="loadModelSettings();"></input>
+			<datalist id="model_list"></datalist>
+			<label class="mdl-textfield__label" for="model">model</label>
+		</div>
+
+		<div class="mdl-grid">
+
+			<div class="mdl-cell mdl-cell--4-col">
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Header					
+						<input class="mdl-textfield__input" type="text" id="header-pulse" name="header-pulse" placeholder="Pulse">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">						
+					<input class="mdl-textfield__input" type="text" id="header-space" name="header-space" placeholder="Space">
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Signal					
+						<input class="mdl-textfield__input" type="text" id="ptrail" name="ptrail" placeholder="Ptrail">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">						
+					<input class="mdl-textfield__input" type="text" id="gap" name="gap" placeholder="Gap">
+				</div>
+
+			</div>
+
+			<div class="mdl-cell mdl-cell--4-col">
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>One					
+						<input class="mdl-textfield__input" type="text" id="one-pulse" name="one-pulse" placeholder="Pulse">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">						
+					<input class="mdl-textfield__input" type="text" id="one-space" name="one-space" placeholder="Space">
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Post data					
+						<input class="mdl-textfield__input" type="text" id="post_data_bits" name="post_data_bits" placeholder="Bits">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">						
+					<input class="mdl-textfield__input" type="text" id="post_data" name="post_data" placeholder="Data">
+				</div>
+			</div>
+
+			<div class="mdl-cell mdl-cell--4-col">
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Zero					
+						<input class="mdl-textfield__input" type="text" id="zero-pulse" name="zero-pulse" placeholder="Pulse">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">						
+					<input class="mdl-textfield__input" type="text" id="zero-space" name="zero-space" placeholder="Space">
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Repeat					
+						<input class="mdl-textfield__input" type="text" id="min_repeat" name="min_repeat" placeholder="Min repeat">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">						
+					<input class="mdl-textfield__input" type="text" id="repeat_gap" name="repeat_gap" placeholder="Gap">
+				</div>
+			</div>
+		</div>
+
+		<div class="mdl-grid">
+			<div class="mdl-cell mdl-cell--4-col">
+			</div>
+
+			<div class="mdl-cell mdl-cell--4-col">
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Command					
+						<input class="mdl-textfield__input" type="text" id="command_length" name="command_length" placeholder="Bits">
+					</label>
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Template
+
+						<select class="" onchange="addToTemplate(this.value);">
+							<option></option>
+							<option>Gap</option>
+							<option>Header</option>
+							<option>Command</option>
+							<option>Post data</option>
+							<option>Ptrail</option>
+						</select>
+						<span class="">		
+							<input class="btn btn-default btn-sm" type="button" value="RESET" onclick="resetTemplate();">
+						</span>
+
+						<ul class="demo-list-item mdl-list" id="templateList"></ul>
+
+					</label>
+				</div>
+
+			</div>
+
+			<div class="mdl-cell mdl-cell--4-col">
+			</div>
+		</div>
+	
+		<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" value="SAVE" onclick="save()" />
+
+	</form>
+	
+
+	<script>
+
+		var timeout;
+
+		function loadMnfList() {
+			var obj = document.getElementById('manufacturer');
+			if (obj.value == "") return;
+			clearTimeout(timeout);
+			timeout = setTimeout(
+				function(){ 
+					xmlhttp = new XMLHttpRequest();
+					xmlhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {	            	
+							var data = JSON.parse(this.responseText);
+							var obj_list = document.getElementById(obj.id + '_list');
+							obj_list.innerHTML = "";
+							for (var idx in data){
+								obj_list.innerHTML += "<option>" + data[idx][obj.id] + "</option>";
+							}
+							obj.focus();
+						}
+					}
+					xmlhttp.open('GET', '/api/'+ obj.id + '/?query=' + obj.value, true);
+					xmlhttp.send();
+				}, 500);
+		}
+
+		function loadModelList(manufacturer) {
+			var obj = document.getElementById('model');
+			obj.value = "";
+
+			clearTimeout(timeout);
+			timeout = setTimeout(
+				function(){ 
+					xmlhttp = new XMLHttpRequest();
+					xmlhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {	            	
+							var data = JSON.parse(this.responseText);
+							var obj_list = document.getElementById(obj.id + '_list');
+							obj_list.innerHTML = "";
+							for (var idx in data.models){
+								obj_list.innerHTML += "<option>" + data.models[idx] + "</option>";
+							}
+							obj.focus();
+						}
+					}
+					xmlhttp.open('GET', '/api/manufacturer/' + manufacturer, true);
+					xmlhttp.send();
+				}, 500);
+		}
+
+		function loadModelSettings() {
+			var objMnf = document.getElementById('manufacturer');
+			var objModel = document.getElementById('model');
+			
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {	            	
+					var data = JSON.parse(this.responseText);
+
+					document.getElementById("command_length").value = data.command_length;
+					document.getElementById("header-pulse").value = data.properties.header.pulse;
+					document.getElementById("header-space").value = data.properties.header.space;
+					document.getElementById("one-pulse").value = data.one.pulse;
+					document.getElementById("one-space").value = data.one.space;
+					document.getElementById("zero-pulse").value = data.zero.pulse;
+					document.getElementById("zero-space").value = data.zero.space;
+					document.getElementById("ptrail").value = data.properties.ptrail;
+					document.getElementById("gap").value = data.properties.gap;
+					document.getElementById("repeat_gap").value = data.repeat_gap;
+					document.getElementById("post_data_bits").value = data.post_data_bits;
+					document.getElementById("post_data").value = data.properties.post_data;
+					document.getElementById("min_repeat").value = data.min_repeat;
+					addToTemplateList(data.template);
+				}
+			}
+			xmlhttp.open('GET', '/api/ir/' + objMnf.value + '/' + model.value, true);
+			xmlhttp.send();
+		}
+
+		function save() {
+			var data = {
+				manufacturer: document.getElementById("manufacturer").value,
+				model: document.getElementById("model").value,
+				command_length: document.getElementById("command_length").value,
+				properties: {
+					header: {
+						pulse: document.getElementById("header-pulse").value,
+						space: document.getElementById("header-space").value,
+					},
+					ptrail: document.getElementById("ptrail").value,
+					gap: document.getElementById("gap").value,
+					post_data: document.getElementById("post_data").value
+				},
+				one: {
+					pulse: document.getElementById("one-pulse").value,
+					space: document.getElementById("one-space").value,
+				},
+				zero: {
+					pulse: document.getElementById("zero-pulse").value,
+					space: document.getElementById("zero-space").value,
+				},
+				repeat_gap: document.getElementById("repeat_gap").value,
+				post_data_bits: document.getElementById("post_data_bits").value,
+				min_repeat: document.getElementById("min_repeat").value,
+				template: Array.from(document.getElementById("templateList").getElementsByTagName("li")).map(r => r.innerText.trim())
+			};
+
+			var json = JSON.stringify(data);
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {	            	
+					alert("Success");
+				}
+			}
+			xmlhttp.open('POST', '/api/ir/', true);
+			xmlhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+			xmlhttp.send(json);
+		}
+
+		function resetTemplate() {
+			document.getElementById("templateList").innerHTML = "";
+		}
+
+		function addToTemplate(value){
+			if (value == "") return;
+			document.getElementById("templateList").innerHTML += createListItem(value);
+		}
+
+		function addToTemplateList(value) {
+			if (!value) return;
+
+			if( Object.prototype.toString.call(value) === '[object Array]' ) {
+				document.getElementById("templateList").innerHTML = Array.from(value).map(r => createListItem(r)).join("");
+			}
+		}
+
+		function createListItem(value) {
+			return `
+				<li class="mdl-list__item">
+					<span class="mdl-list__item-primary-content">
+					${value}
+					</span>
+				</li>`;
+		}
+
+	</script>
+
+</body>
+</html>
