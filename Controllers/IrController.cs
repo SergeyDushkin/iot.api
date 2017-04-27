@@ -42,6 +42,12 @@ namespace iot.api.Controllers
         [HttpPost]
         public void Post([FromBody]IRDeviceSetting value)
         {
+            if (String.IsNullOrEmpty(value.Manufacturer))
+                throw new Exception("Manufacturer is not valid");
+                
+            if (String.IsNullOrEmpty(value.Model))
+                throw new Exception("Model is not valid");
+                
             var id = value.Manufacturer + ":" + value.Model;
 
             var response = client.Update<IRDeviceSetting, object>(id, u => u.Index("ir").Doc(value).DocAsUpsert());
