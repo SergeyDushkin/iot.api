@@ -38,10 +38,8 @@ namespace iot.api
                 .SniffOnConnectionFault(false)
                 .SniffOnStartup(false)
                 .SniffLifeSpan(TimeSpan.FromMinutes(1));
-                
-            var client = new ElasticClient(settings);
 
-            services.AddSingleton<IElasticClient>(client);
+            services.AddScoped<IElasticClient>(r => new ElasticClient(settings));
 
             services.AddSwaggerGen(c =>
             {
