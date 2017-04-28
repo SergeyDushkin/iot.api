@@ -18,6 +18,7 @@
 		input, select {
 			text-align: center;
 		}	
+		textarea { font-size: 0.9em; }
 		</style>
 
 	</head>
@@ -27,7 +28,7 @@
 
 	<form>
 		<div class="mdl-textfield mdl-js-textfield">
-			<input class="mdl-textfield__input" type="text" list="manufacturer_list" id="manufacturer" placeholder="Manufacturer" onkeyup="loadMnfList(this);" onchange="loadModelList(this.value)"></input>
+			<input class="mdl-textfield__input" type="text" list="manufacturer_list" id="manufacturer" placeholder="Manufacturer" onchange="loadModelList(this.value)"></input>
 			<datalist id="manufacturer_list"></datalist>
 			<label class="mdl-textfield__label" for="manufacturer">manufacturer</label>
 		</div>
@@ -142,22 +143,19 @@
 
 				<div class="mdl-textfield mdl-js-textfield">	
 					<label>Template
-
-						<select class="" onchange="addToTemplate(this.value);">
-							<option></option>
-							<option>Gap</option>
-							<option>Header</option>
-							<option>Command</option>
-							<option>Post data</option>
-							<option>Ptrail</option>
-						</select>
-						<span class="">		
-							<input class="btn btn-default btn-sm" type="button" value="RESET" onclick="resetTemplate();">
-						</span>
-
-						<ul class="demo-list-item mdl-list" id="templateList"></ul>
-
+						<textarea class="mdl-textfield__input" type="text" rows= "5" type="text" id="template" name="template" readonly="readonly" placeholder="Message template" ></textarea>
 					</label>
+				</div>				
+				
+				<div class="mdl-textfield mdl-js-textfield">	
+					<input class="mdl-textfield__input" type="text" placeholder="Command" list="command_list" oninput="addToTemplate(this.value);this.value=''" />
+					<datalist id="command_list">
+						<option>Gap</option>
+						<option>Header</option>
+						<option>Command</option>
+						<option>Post data</option>
+						<option>Ptrail</option>
+					</datalist>
 				</div>
 
 			</div>
@@ -173,56 +171,49 @@
 
 	<script>
 
-		var timeout;
+		loadMnfList()
 
 		function loadMnfList() {
 			var obj = document.getElementById('manufacturer');
-			if (obj.value == "") return;
-			clearTimeout(timeout);
-			timeout = setTimeout(
-				function(){ 
-					xmlhttp = new XMLHttpRequest();
-					xmlhttp.onreadystatechange = function() {
-						if (this.readyState == 4 && this.status == 200) {	            	
-							var data = JSON.parse(this.responseText);
-							var obj_list = document.getElementById(obj.id + '_list');
-							obj_list.innerHTML = "";
-							for (var idx in data){
-								obj_list.innerHTML += "<option>" + data[idx][obj.id] + "</option>";
-							}
-							obj.focus();
-						}
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {	            	
+					var data = JSON.parse(this.responseText);
+					var obj_list = document.getElementById(obj.id + '_list');
+					obj_list.innerHTML = "";
+					for (var idx in data){
+						obj_list.innerHTML += "<option>" + data[idx][obj.id] + "</option>";
 					}
-					xmlhttp.open('GET', '/api/'+ obj.id + '/?query=' + obj.value, true);
-					xmlhttp.send();
-				}, 500);
+					obj.focus();
+				}
+			}
+			xmlhttp.open('GET', '/api/'+ obj.id + '/?query=' + obj.value, true);
+			xmlhttp.send();
 		}
 
 		function loadModelList(manufacturer) {
 			var obj = document.getElementById('model');
 			obj.value = "";
 
-			clearTimeout(timeout);
-			timeout = setTimeout(
-				function(){ 
-					xmlhttp = new XMLHttpRequest();
-					xmlhttp.onreadystatechange = function() {
-						if (this.readyState == 4 && this.status == 200) {	            	
-							var data = JSON.parse(this.responseText);
-							var obj_list = document.getElementById(obj.id + '_list');
-							obj_list.innerHTML = "";
-							for (var idx in data.models){
-								obj_list.innerHTML += "<option>" + data.models[idx] + "</option>";
-							}
-							obj.focus();
-						}
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {	            	
+					var data = JSON.parse(this.responseText);
+					var obj_list = document.getElementById(obj.id + '_list');
+					obj_list.innerHTML = "";
+					for (var idx in data.models){
+						obj_list.innerHTML += "<option>" + data.models[idx] + "</option>";
 					}
-					xmlhttp.open('GET', '/api/manufacturer/' + manufacturer, true);
-					xmlhttp.send();
-				}, 500);
+					obj.focus();
+				}
+			}
+			xmlhttp.open('GET', '/api/manufacturer/' + manufacturer, true);
+			xmlhttp.send();
 		}
 
 		function loadModelSettings() {
+			clear();
 			var objMnf = document.getElementById('manufacturer');
 			var objModel = document.getElementById('model');
 			
@@ -251,6 +242,23 @@
 			xmlhttp.send();
 		}
 
+		function clear() {
+			document.getElementById("command_length").value = "";
+			document.getElementById("header-pulse").value = "";
+			document.getElementById("header-space").value = "";
+			document.getElementById("one-pulse").value = "";
+			document.getElementById("one-space").value = "";
+			document.getElementById("zero-pulse").value = "";
+			document.getElementById("zero-space").value = "";
+			document.getElementById("ptrail").value = "";
+			document.getElementById("gap").value = "";
+			document.getElementById("repeat_gap").value = "";
+			document.getElementById("post_data_bits").value = "";
+			document.getElementById("post_data").value = "";
+			document.getElementById("min_repeat").value = "";			
+			document.getElementById("template").value = "";			
+		}
+
 		function save() {
 			var data = {
 				manufacturer: document.getElementById("manufacturer").value,
@@ -276,7 +284,7 @@
 				repeat_gap: document.getElementById("repeat_gap").value,
 				post_data_bits: document.getElementById("post_data_bits").value,
 				min_repeat: document.getElementById("min_repeat").value,
-				template: Array.from(document.getElementById("templateList").getElementsByTagName("li")).map(r => r.innerText.trim())
+				template: getTemplate()
 			};
 
 			var json = JSON.stringify(data);
@@ -293,19 +301,27 @@
 		}
 
 		function resetTemplate() {
-			document.getElementById("templateList").innerHTML = "";
+			document.getElementById("template").value = "";
+		}
+
+		function getTemplate() {
+			return document.getElementById("template").value.split('|')
 		}
 
 		function addToTemplate(value){
 			if (value == "") return;
-			document.getElementById("templateList").innerHTML += createListItem(value);
+
+			var data = getTemplate();
+			data.push(value);
+
+			return document.getElementById("template").value = data.join('|');
 		}
 
 		function addToTemplateList(value) {
 			if (!value) return;
 
 			if( Object.prototype.toString.call(value) === '[object Array]' ) {
-				document.getElementById("templateList").innerHTML = Array.from(value).map(r => createListItem(r)).join("");
+				document.getElementById("template").value = value.join('|');
 			}
 		}
 
