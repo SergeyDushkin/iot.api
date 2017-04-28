@@ -10,7 +10,6 @@
 
 		<style type="text/css">
 		* {
-			font-family: 'Verdana'; 
 		}
 		html {
 			text-align: center;
@@ -43,28 +42,30 @@
 			<div class="mdl-cell mdl-cell--4-col">
 
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Header					
-						<input class="mdl-textfield__input" type="text" id="header-pulse" name="header-pulse" placeholder="Pulse">
-					</label>
-				</div>
-
-				<br />
-
-				<div class="mdl-textfield mdl-js-textfield">						
-					<input class="mdl-textfield__input" type="text" id="header-space" name="header-space" placeholder="Space">
+					<label for="header-pulse">Header</label>
+					<label class="mdl-textfield__label" for="header-pulse"></label>
+					<input class="mdl-textfield__input" type="text" id="header-pulse" name="header-pulse" placeholder="Pulse">
 				</div>
 
 				<br />
 
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Signal					
-						<input class="mdl-textfield__input" type="text" id="ptrail" name="ptrail" placeholder="Ptrail">
-					</label>
+					<label class="mdl-textfield__label" for="header-space"></label>					
+					<input class="mdl-textfield__input" type="text" id="header-space" name="header-space" placeholder="Space">
 				</div>
 
 				<br />
 
-				<div class="mdl-textfield mdl-js-textfield">						
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">	
+					<label for="ptrail">Signal</label>
+					<label class="mdl-textfield__label" for="ptrail"></label>
+					<input class="mdl-textfield__input" type="text" id="ptrail" name="ptrail" placeholder="Ptrail">
+				</div>
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label class="mdl-textfield__label" for="gap"></label>					
 					<input class="mdl-textfield__input" type="text" id="gap" name="gap" placeholder="Gap">
 				</div>
 
@@ -72,56 +73,60 @@
 
 			<div class="mdl-cell mdl-cell--4-col">
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>One					
-						<input class="mdl-textfield__input" type="text" id="one-pulse" name="one-pulse" placeholder="Pulse">
-					</label>
+					<label>One</label>
+					<label class="mdl-textfield__label" for="one-pulse"></label>	
+					<input class="mdl-textfield__input" type="text" id="one-pulse" name="one-pulse" placeholder="Pulse">
 				</div>
 
 				<br />
 
-				<div class="mdl-textfield mdl-js-textfield">						
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label class="mdl-textfield__label" for="one-space"></label>							
 					<input class="mdl-textfield__input" type="text" id="one-space" name="one-space" placeholder="Space">
 				</div>
 
 				<br />
 
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Post data					
-						<input class="mdl-textfield__input" type="text" id="post_data_bits" name="post_data_bits" placeholder="Bits">
-					</label>
+					<label>Post data</label>
+					<label class="mdl-textfield__label" for="post_data_bits"></label>
+					<input class="mdl-textfield__input" type="text" id="post_data_bits" name="post_data_bits" placeholder="Bits">
 				</div>
 
 				<br />
 
-				<div class="mdl-textfield mdl-js-textfield">						
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label class="mdl-textfield__label" for="post_data"></label>							
 					<input class="mdl-textfield__input" type="text" id="post_data" name="post_data" placeholder="Data">
 				</div>
 			</div>
 
 			<div class="mdl-cell mdl-cell--4-col">
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Zero					
-						<input class="mdl-textfield__input" type="text" id="zero-pulse" name="zero-pulse" placeholder="Pulse">
-					</label>
+					<label>Zero</label>
+					<label class="mdl-textfield__label" for="zero-pulse"></label>	
+					<input class="mdl-textfield__input" type="text" id="zero-pulse" name="zero-pulse" placeholder="Pulse">
 				</div>
 
 				<br />
 
-				<div class="mdl-textfield mdl-js-textfield">						
+				<div class="mdl-textfield mdl-js-textfield">
+					<label class="mdl-textfield__label" for="zero-space"></label>								
 					<input class="mdl-textfield__input" type="text" id="zero-space" name="zero-space" placeholder="Space">
 				</div>
 
 				<br />
 
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Repeat					
-						<input class="mdl-textfield__input" type="text" id="min_repeat" name="min_repeat" placeholder="Min repeat">
-					</label>
+					<label>Repeat</label>
+					<label class="mdl-textfield__label" for="min_repeat"></label>	
+					<input class="mdl-textfield__input" type="text" id="min_repeat" name="min_repeat" placeholder="Min repeat">
 				</div>
 
 				<br />
 
-				<div class="mdl-textfield mdl-js-textfield">						
+				<div class="mdl-textfield mdl-js-textfield">
+					<label class="mdl-textfield__label" for="repeat_gap"></label>								
 					<input class="mdl-textfield__input" type="text" id="repeat_gap" name="repeat_gap" placeholder="Gap">
 				</div>
 			</div>
@@ -134,20 +139,21 @@
 			<div class="mdl-cell mdl-cell--4-col">
 
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Command					
-						<input class="mdl-textfield__input" type="text" id="command_length" name="command_length" placeholder="Bits">
-					</label>
+					<label>Command</label>
+					<label class="mdl-textfield__label" for="command_length"></label>	
+					<input class="mdl-textfield__input" type="text" id="command_length" name="command_length" placeholder="Bits">
 				</div>
 
 				<br />
 
 				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Template
-						<textarea class="mdl-textfield__input" type="text" rows= "5" type="text" id="template" name="template" readonly="readonly" placeholder="Message template" ></textarea>
-					</label>
+					<label>Template</label>
+					<label class="mdl-textfield__label" for="template"></label>	
+					<textarea class="mdl-textfield__input" type="text" rows= "5" type="text" id="template" name="template" readonly="readonly" placeholder="Message template" ></textarea>
 				</div>				
 				
 				<div class="mdl-textfield mdl-js-textfield">	
+					<label class="mdl-textfield__label" for="command_list"></label>	
 					<input class="mdl-textfield__input" type="text" placeholder="Command" list="command_list" oninput="addToTemplate(this.value);this.value=''" />
 					<datalist id="command_list">
 						<option>Gap</option>
@@ -164,9 +170,19 @@
 			</div>
 		</div>
 	
-		<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" value="SAVE" onclick="save()" />
-
 	</form>
+
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--4-col">
+		</div>
+
+		<div class="mdl-cell mdl-cell--4-col">
+			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" onclick="save()">Save</button>
+		</div>
+
+		<div class="mdl-cell mdl-cell--4-col">
+		</div>
+	</div>
 	
 
 	<script>
@@ -291,8 +307,7 @@
 
 			xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {	            	
-					alert("Success");
+				if (this.readyState == 4 && this.status == 200) {	
 				}
 			}
 			xmlhttp.open('POST', '/api/ir/', true);
