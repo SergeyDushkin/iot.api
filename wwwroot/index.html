@@ -18,6 +18,9 @@
 			text-align: center;
 		}	
 		textarea { font-size: 0.9em; }
+		.full-width {
+			width:500px;
+		}
 		</style>
 
 	</head>
@@ -98,6 +101,14 @@
 				<div class="mdl-textfield mdl-js-textfield">	
 					<label class="mdl-textfield__label" for="post_data"></label>							
 					<input class="mdl-textfield__input" type="text" id="post_data" name="post_data" placeholder="Data">
+				</div>	
+
+				<br />
+
+				<div class="mdl-textfield mdl-js-textfield">	
+					<label>Command</label>
+					<label class="mdl-textfield__label" for="command_length"></label>	
+					<input class="mdl-textfield__input" type="text" id="command_length" name="command_length" placeholder="Bits">
 				</div>
 			</div>
 
@@ -133,23 +144,13 @@
 		</div>
 
 		<div class="mdl-grid">
-			<div class="mdl-cell mdl-cell--4-col">
-			</div>
 
-			<div class="mdl-cell mdl-cell--4-col">
+			<div class="mdl-cell mdl-cell--12-col">
 
-				<div class="mdl-textfield mdl-js-textfield">	
-					<label>Command</label>
-					<label class="mdl-textfield__label" for="command_length"></label>	
-					<input class="mdl-textfield__input" type="text" id="command_length" name="command_length" placeholder="Bits">
-				</div>
-
-				<br />
-
-				<div class="mdl-textfield mdl-js-textfield">	
+				<div class="full-width mdl-textfield mdl-js-textfield extrawide">	
 					<label>Template</label>
 					<label class="mdl-textfield__label" for="template"></label>	
-					<textarea class="mdl-textfield__input" type="text" rows= "5" type="text" id="template" name="template" readonly="readonly" placeholder="Message template" ></textarea>
+					<input class="mdl-textfield__input" type="text" type="text" id="template" name="template" readonly="readonly" placeholder="Message template" />
 				</div>				
 				
 				<div class="mdl-textfield mdl-js-textfield">	
@@ -164,23 +165,19 @@
 					</datalist>
 				</div>
 
+				<button class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect" type="button" onclick="resetTemplate()">
+					Reset
+				</button>
+
 			</div>
 
-			<div class="mdl-cell mdl-cell--4-col">
-			</div>
 		</div>
 	
 	</form>
 
 	<div class="mdl-grid">
-		<div class="mdl-cell mdl-cell--4-col">
-		</div>
-
-		<div class="mdl-cell mdl-cell--4-col">
+		<div class="mdl-cell mdl-cell--12-col">
 			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" onclick="save()">Save</button>
-		</div>
-
-		<div class="mdl-cell mdl-cell--4-col">
 		</div>
 	</div>
 	
@@ -326,10 +323,12 @@
 		function addToTemplate(value){
 			if (value == "") return;
 
-			var data = getTemplate();
-			data.push(value);
-
-			return document.getElementById("template").value = data.join('|');
+			var template = document.getElementById("template");
+			
+			if (template.value != "")
+				template.value += "|" + value;
+			else
+				template.value += value;
 		}
 
 		function addToTemplateList(value) {
@@ -338,15 +337,6 @@
 			if( Object.prototype.toString.call(value) === '[object Array]' ) {
 				document.getElementById("template").value = value.join('|');
 			}
-		}
-
-		function createListItem(value) {
-			return `
-				<li class="mdl-list__item">
-					<span class="mdl-list__item-primary-content">
-					${value}
-					</span>
-				</li>`;
 		}
 
 	</script>
